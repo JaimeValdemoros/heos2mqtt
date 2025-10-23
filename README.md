@@ -41,20 +41,20 @@ Check the logs:
 
 ```bash
 journalctl -f -xeu heos2mqtt-events@192.168.1.219
-# Oct 23 13:13:17 pi-zero-3 heos2mqtt-events[3189]: HEOS connection: 192.168.1.219:1255
-# Oct 23 13:13:17 pi-zero-3 heos2mqtt-events[3189]: MQTT connection: 192.168.1.171:1883
-# Oct 23 13:13:17 pi-zero-3 heos2mqtt-events[3189]: MQTT topic: heos/raw/events
-# Oct 23 13:13:17 pi-zero-3 heos2mqtt-events[3195]: {"heos": {"command": "system/register_for_change_events", "result": "success", "message": "enable=on"}}
-# Oct 23 13:13:21 pi-zero-3 heos2mqtt-events[3195]: {"heos": {"command": "event/player_now_playing_progress", "message": "pid=-1163911007&cur_pos=379000&duration=0"}}
+# Oct 23 13:13:17 pi-zero heos2mqtt-events[3189]: HEOS connection: 192.168.1.219:1255
+# Oct 23 13:13:17 pi-zero heos2mqtt-events[3189]: MQTT connection: 192.168.1.171:1883
+# Oct 23 13:13:17 pi-zero heos2mqtt-events[3189]: MQTT topic: heos/raw/events
+# Oct 23 13:13:17 pi-zero heos2mqtt-events[3195]: {"heos": {"command": "system/register_for_change_events", "result": "success", "message": "enable=on"}}
+# Oct 23 13:13:21 pi-zero heos2mqtt-events[3195]: {"heos": {"command": "event/player_now_playing_progress", "message": "pid=-1163911007&cur_pos=379000&duration=0"}}
 ```
 
 (my speaker is currently playing, so we get '`player_now_playing_progress`' events)
 
 ```bash
 journalctl -f -xeu heos2mqtt-commands@192.168.1.219
-# Oct 23 13:28:11 pi-zero-3 heos2mqtt-commands[3705]: HEOS connection: 192.168.1.219:1255
-# Oct 23 13:28:11 pi-zero-3 heos2mqtt-commands[3705]: MQTT connection: 192.168.1.171:1883
-# Oct 23 13:28:11 pi-zero-3 heos2mqtt-commands[3705]: MQTT topic: heos/raw/commands
+# Oct 23 13:28:11 pi-zero heos2mqtt-commands[3705]: HEOS connection: 192.168.1.219:1255
+# Oct 23 13:28:11 pi-zero heos2mqtt-commands[3705]: MQTT connection: 192.168.1.171:1883
+# Oct 23 13:28:11 pi-zero heos2mqtt-commands[3705]: MQTT topic: heos/raw/commands
 ```
 
 (no commands yet - let's go do that now)
@@ -73,12 +73,12 @@ Now let's go back and check the logs:
 
 ```bash
 journalctl -xeu heos2mqtt-commands@192.168.1.219
-# Oct 23 13:42:41 pi-zero-3 heos2mqtt-commands[3981]: HEOS connection: 192.168.1.219:1255
-# Oct 23 13:42:41 pi-zero-3 heos2mqtt-commands[3981]: MQTT connection: 192.168.1.171:1883
-# Oct 23 13:42:41 pi-zero-3 heos2mqtt-commands[3981]: MQTT request topic: heos/raw/commands
-# Oct 23 13:42:41 pi-zero-3 heos2mqtt-commands[3981]: MQTT response topic: heos/raw/commands/response
-# Oct 23 13:42:45 pi-zero-3 heos2mqtt-commands[3987]: heos://player/get_players
-# Oct 23 13:42:45 pi-zero-3 heos2mqtt-commands[3989]: {"heos": {"command": "player/get_players", "result": "success", "message": ""}, "payload": [{"name": "Home Theater", "pid": 1816109296, "model": "Denon AVR-X2700H", "version": "3.88.350", "ip": "192.168.1.136", "network": "wifi", "lineout": 0, "serial": "****"}, {"name": "Kitchen", "pid": -1163911007, "model": "Denon Home 150", "version": "3.88.350", "ip": "192.168.1.219", "network": "wifi", "lineout": 0, "serial": "****"}]}
+# Oct 23 13:42:41 pi-zero heos2mqtt-commands[3981]: HEOS connection: 192.168.1.219:1255
+# Oct 23 13:42:41 pi-zero heos2mqtt-commands[3981]: MQTT connection: 192.168.1.171:1883
+# Oct 23 13:42:41 pi-zero heos2mqtt-commands[3981]: MQTT request topic: heos/raw/commands
+# Oct 23 13:42:41 pi-zero heos2mqtt-commands[3981]: MQTT response topic: heos/raw/commands/response
+# Oct 23 13:42:45 pi-zero heos2mqtt-commands[3987]: heos://player/get_players
+# Oct 23 13:42:45 pi-zero heos2mqtt-commands[3989]: {"heos": {"command": "player/get_players", "result": "success", "message": ""}, "payload": [{"name": "Home Theater", "pid": 1816109296, "model": "Denon AVR-X2700H", "version": "3.88.350", "ip": "192.168.1.136", "network": "wifi", "lineout": 0, "serial": "****"}, {"name": "Kitchen", "pid": -1163911007, "model": "Denon Home 150", "version": "3.88.350", "ip": "192.168.1.219", "network": "wifi", "lineout": 0, "serial": "****"}]}
 ```
 
 If we were also listening to the response channel, we'd also see it transmitted back:
