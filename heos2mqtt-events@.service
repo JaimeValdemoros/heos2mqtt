@@ -1,0 +1,13 @@
+# /etc/systemd/system/heos2mqtt-events@.service
+
+[Unit]
+Description=heos2mqtt bridge events
+After=network-online.target
+
+[Service]
+ExecStart=/usr/local/bin/heos2mqtt-events %i
+EnvironmentFile=-/etc/default/heos2mqtt
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
