@@ -1,0 +1,13 @@
+# /etc/systemd/system/heos2mqtt-commands@.service
+
+[Unit]
+Description=heos2mqtt bridge commands
+After=network-online.target
+
+[Service]
+ExecStart=/usr/local/bin/heos2mqtt-commands %i
+EnvironmentFile=-/etc/default/heos2mqtt
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

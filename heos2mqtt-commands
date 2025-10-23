@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+# http://redsymbol.net/articles/unofficial-bash-strict-mode/
+set -euo pipefail
+
+if [[ -z "${1:-}" ]]; then
+    echo "usage: $0 HEOS_IP"
+    exit 1
+fi
+
+HEOS_IP="$1"
+HEOS_PORT="${HEOS_PORT:-1255}"
+
+MQTT_IP="${MQTT_IP:-localhost}"
+MQTT_PORT="${MQTT_PORT:-1883}"
+
+MQTT_TOPIC="${MQTT_TOPIC:-heos/raw/commands}"
+
+echo "HEOS connection: ${HEOS_IP}:${HEOS_PORT}"
+echo "MQTT connection: ${MQTT_IP}:${MQTT_PORT}"
+
+echo "MQTT topic: ${MQTT_TOPIC}"
+
+if [[ -z "${MQTT_USER:-}" ]]; then
+    echo "Missing MQTT_USER environment variable"
+    exit 1
+fi
+
+if [[ -z "${MQTT_PASS:-}" ]]; then
+    echo "Missing MQTT_PASS environment variable"
+    exit 1
+fi
+
+mosquitto_sub \
+    --host "$MQTT_IP" --port "$MQTT_PORT" \
+    --username "$MQTT_USER" --pw "$MQTT_PASS" \
+    --topic "$MQTT_TOPIC" |
+    tee >(cat 1>&2) |
+    netcat "$HEOS_IP" "$HEOS_PORT"
