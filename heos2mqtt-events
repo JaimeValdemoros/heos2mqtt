@@ -14,12 +14,12 @@ HEOS_PORT="${HEOS_PORT:-1255}"
 MQTT_IP="${MQTT_IP:-localhost}"
 MQTT_PORT="${MQTT_PORT:-1883}"
 
-MQTT_TOPIC="${MQTT_TOPIC:-heos/raw/events}"
+MQTT_EVENT_TOPIC="${MQTT_EVENT_TOPIC:-heos/raw/events}"
 
 echo "HEOS connection: ${HEOS_IP}:${HEOS_PORT}"
 echo "MQTT connection: ${MQTT_IP}:${MQTT_PORT}"
 
-echo "MQTT topic: ${MQTT_TOPIC}"
+echo "MQTT event topic: ${MQTT_EVENT_TOPIC}"
 
 if [[ -z "${MQTT_USER:-}" ]]; then
     echo "Missing MQTT_USER environment variable"
@@ -37,4 +37,4 @@ echo "heos://system/register_for_change_events?enable=on" |
     mosquitto_pub \
         --host "$MQTT_IP" --port "$MQTT_PORT" \
         --username "$MQTT_USER" --pw "$MQTT_PASS" \
-        --topic "$MQTT_TOPIC" --stdin-line
+        --topic "$MQTT_EVENT_TOPIC" --stdin-line

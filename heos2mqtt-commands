@@ -14,12 +14,14 @@ HEOS_PORT="${HEOS_PORT:-1255}"
 MQTT_IP="${MQTT_IP:-localhost}"
 MQTT_PORT="${MQTT_PORT:-1883}"
 
-MQTT_TOPIC="${MQTT_TOPIC:-heos/raw/commands}"
+MQTT_REQ_TOPIC="${MQTT_REQ_TOPIC:-heos/raw/commands}"
+MQTT_RESP_TOPIC="${MQTT_RESP_TOPIC:-heos/raw/commands/response}"
 
 echo "HEOS connection: ${HEOS_IP}:${HEOS_PORT}"
 echo "MQTT connection: ${MQTT_IP}:${MQTT_PORT}"
 
-echo "MQTT topic: ${MQTT_TOPIC}"
+echo "MQTT request topic: ${MQTT_REQ_TOPIC}"
+echo "MQTT response topic: ${MQTT_RESP_TOPIC}"
 
 if [[ -z "${MQTT_USER:-}" ]]; then
     echo "Missing MQTT_USER environment variable"
@@ -34,6 +36,11 @@ fi
 mosquitto_sub \
     --host "$MQTT_IP" --port "$MQTT_PORT" \
     --username "$MQTT_USER" --pw "$MQTT_PASS" \
-    --topic "$MQTT_TOPIC" |
+    --topic "$MQTT_REQ_TOPIC" |
     tee >(cat 1>&2) |
-    netcat "$HEOS_IP" "$HEOS_PORT"
+    netcat "$HEOS_IP" "$HEOS_PORT" |
+    tee >(cat 1>&2) |
+    mosquitto_pub \
+        --host "$MQTT_IP" --port "$MQTT_PORT" \
+        --username "$MQTT_USER" --pw "$MQTT_PASS" \
+        --topic "$MQTT_RESP_TOPIC" --stdin-line

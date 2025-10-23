@@ -1,5 +1,7 @@
 # heos2mqtt
 
+## Setup
+
 Copy `heos2mqtt-events` and `heos2mqtt-commands` into `/usr/local/bin`.
 
 Copy `heos2mqtt-events@.service` and `heos2mqtt-commands@.service` to `/etc/systemd/system`.
@@ -57,11 +59,11 @@ journalctl -f -xeu heos2mqtt-commands@192.168.1.219
 
 (no commands yet - let's go do that now)
 
-# Send a command
+## Sending a command
 
 You can see the list of valid commands at [HEOS_CLI_ProtocolSpecification-Version-1.17.pdf](https://rn.dmglobal.com/usmodel/HEOS_CLI_ProtocolSpecification-Version-1.17.pdf).
 
-Use your favourite MQTT client to send a `heos://player/get_players` command. In this example I'll just use `mosquitto_pub` which I've just installed on this machine, but you can do this from whatever interface you have:
+Use your favourite MQTT client to send a `heos://player/get_players` command. In this example I'll just use `mosquitto_pub` which I've just installed on this machine, but you can do this from whatever interface you have available, as long as it can access the MQTT broker:
 
 ```bash
 mosquitto_pub -h 192.168.1.171 -p 1883 -u heos --pw "$MY_MQTT_PASS" --topic heos/raw/commands -m 'heos://player/get_players'
@@ -71,6 +73,17 @@ Now let's go back and check the logs:
 
 ```bash
 journalctl -xeu heos2mqtt-commands@192.168.1.219
-# Oct 23 13:35:32 pi-zero-3 heos2mqtt-commands[3709]: heos://player/get_players
-# Oct 23 13:35:32 pi-zero-3 heos2mqtt-commands[3708]: {"heos": {"command": "player/get_players", "result": "success", "message": ""}, "payload": [{"name": "Home Theater", "pid": 1816109296, "model": "Denon AVR-X2700H", "version": "3.88.350", "ip": "192.168.1.136", "network": "wifi", "lineout": 0, "serial": "DBBZ112186509"}, {"name": "Kitchen", "pid": -1163911007, "model": "Denon Home 150", "version": "3.88.350", "ip": "192.168.1.219", "network": "wifi", "lineout": 0, "serial": "BLT27240810329"}]}
+# Oct 23 13:42:41 pi-zero-3 heos2mqtt-commands[3981]: HEOS connection: 192.168.1.219:1255
+# Oct 23 13:42:41 pi-zero-3 heos2mqtt-commands[3981]: MQTT connection: 192.168.1.171:1883
+# Oct 23 13:42:41 pi-zero-3 heos2mqtt-commands[3981]: MQTT request topic: heos/raw/commands
+# Oct 23 13:42:41 pi-zero-3 heos2mqtt-commands[3981]: MQTT response topic: heos/raw/commands/response
+# Oct 23 13:42:45 pi-zero-3 heos2mqtt-commands[3987]: heos://player/get_players
+# Oct 23 13:42:45 pi-zero-3 heos2mqtt-commands[3989]: {"heos": {"command": "player/get_players", "result": "success", "message": ""}, "payload": [{"name": "Home Theater", "pid": 1816109296, "model": "Denon AVR-X2700H", "version": "3.88.350", "ip": "192.168.1.136", "network": "wifi", "lineout": 0, "serial": "****"}, {"name": "Kitchen", "pid": -1163911007, "model": "Denon Home 150", "version": "3.88.350", "ip": "192.168.1.219", "network": "wifi", "lineout": 0, "serial": "****"}]}
+```
+
+If we were also listening to the response channel, we'd also see it transmitted back:
+
+```bash
+mosquitto_sub -h 192.168.1.171 -p 1883 -u heos --pw "$MY_MQTT_PASS" --topic heos/raw/commands/response
+# {"heos": {"command": "player/get_players", "result": "success", "message": ""}, "payload": [{"name": "Home Theater", "pid": 1816109296, "model": "Denon AVR-X2700H", "version": "3.88.350", "ip": "192.168.1.136", "network": "wifi", "lineout": 0, "serial": "****"}, {"name": "Kitchen", "pid": -1163911007, "model": "Denon Home 150", "version": "3.88.350", "ip": "192.168.1.219", "network": "wifi", "lineout": 0, "serial": "****"}]}
 ```
