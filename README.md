@@ -20,7 +20,7 @@ Copy `heos2mqtt-events` and `heos2mqtt-commands` into `/usr/local/bin`. Make sur
 
 Copy `heos2mqtt-events@.service` and `heos2mqtt-commands@.service` to `/etc/systemd/system`.
 
-Install `netcat` and `mosquitto_{pub,sub}` (example for debian - your particular OS might have a different package manager and different package names)
+Install `netcat` and `mosquitto_{pub,sub}` (example for Debian - your particular OS might have a different package manager and different package names):
 
 ```bash
 sudo apt install netcat-traditional mosquitto-clients
@@ -36,7 +36,7 @@ MQTT_PASS=mysupersecretpassword
 EOF
 ```
 
-**Note**: since this contains a password, you might want to restrict access to only the root account:
+**Note**: since this contains a password, you might want to restrict access to only the root account and check you can't access it as the normal account:
 
 ```bash
 sudo chmod 400 /etc/default/heos2mqtt
@@ -44,7 +44,7 @@ cat /etc/default/heos2mqtt
 # cat: /etc/default/heos2mqtt: Permission denied
 ```
 
-Enable the services, passing the IP of your HEOS device as the instantiated parameter:
+Enable the services, passing the IP of your HEOS device as the instantiated parameter. In my case I have a HEOS speaker at `192.168.1.219`:
 
 ```bash
 sudo systemctl enable --now heos2mqtt-events@192.168.1.219
@@ -71,7 +71,7 @@ journalctl -f -xeu heos2mqtt-commands@192.168.1.219
 # Oct 23 13:28:11 pi-zero heos2mqtt-commands[3705]: MQTT topic: heos/raw/commands
 ```
 
-(no commands yet - let's go do that now)
+(no commands yet - let's do that now)
 
 ## Sending a command
 
