@@ -1,5 +1,19 @@
 # heos2mqtt
 
+Bridge between HEOS telnet commands ([HEOS_CLI_ProtocolSpecification-Version-1.17.pdf](https://rn.dmglobal.com/usmodel/HEOS_CLI_ProtocolSpecification-Version-1.17.pdf)) and MQTT.
+
+Takes 3 MQTT topics:
+
+| Environment variable | Default | Summary |
+| - | - | - |
+| MQTT_EVENT_TOPIC | heos/raw/events | HEOS -> MQTT generated events |
+| MQTT_REQ_TOPIC | heos/raw/commands | MQTT -> HEOS commands |
+| MQTT_RESP_TOPIC | heos/raw/commands/response | HEOS -> MQTT responses to commands relayed back |
+
+`MQTT_EVENT_TOPIC` corresponds to the contents of section 5 in the protocol spec. The service will call `heos://system/register_for_change_events` and relay any messages back to this channel.
+
+`MQTT_REQ_TOPIC` takes strings in the form defined by the HEOS specification. These messages will be relayed to the telnet session with HEOS. Responses from HEOS to these commands will then be relayed back to `MQTT_RESP_TOPIC`.
+
 ## Setup
 
 Copy `heos2mqtt-events` and `heos2mqtt-commands` into `/usr/local/bin`.
