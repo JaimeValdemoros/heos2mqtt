@@ -16,7 +16,7 @@ Takes 3 MQTT topics:
 
 ## Setup
 
-Copy `heos2mqtt-events` and `heos2mqtt-commands` into `/usr/local/bin`.
+Copy `heos2mqtt-events` and `heos2mqtt-commands` into `/usr/local/bin`. Make sure they have the executable bit set (`chmod +x heos2mqtt-commands heos2mqtt-events`).
 
 Copy `heos2mqtt-events@.service` and `heos2mqtt-commands@.service` to `/etc/systemd/system`.
 
