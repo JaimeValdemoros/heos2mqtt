@@ -7,6 +7,7 @@ After=network-online.target
 [Service]
 ExecStart=/usr/local/bin/heos2mqtt-events %i
 EnvironmentFile=-/etc/default/heos2mqtt
+DynamicUser=yes
 Restart=on-failure
 
 [Install]
