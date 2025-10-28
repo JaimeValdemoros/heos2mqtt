@@ -8,7 +8,8 @@ After=network-online.target
 ExecStart=/usr/local/bin/heos2mqtt-commands %i
 EnvironmentFile=-/etc/default/heos2mqtt
 DynamicUser=yes
-Restart=on-failure
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
+
